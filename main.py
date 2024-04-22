@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal
@@ -12,6 +13,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+db_dependency = Annotated[Session, Depends(get_db)]        
 
 @app.get("/")
 def read_root():
@@ -48,3 +51,4 @@ def delete_booking(booking_id: int, db: Session = Depends(get_db)):
     db.delete(booking)
     db.commit()
     return {"message": "Booking deleted successfully"}
+
